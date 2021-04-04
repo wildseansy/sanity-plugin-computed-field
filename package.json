@@ -1,0 +1,65 @@
+{
+  "name": "sanity-plugin-computed-field",
+  "version": "1.0.1",
+  "description": "A Field based on other fields. Memoization in your sanity model",
+  "main": "lib/ComputedField.js",
+  "scripts": {
+    "format": "prettier --write .",
+    "clear-lib": "node clearLib.js",
+    "build": "npm run format && npm run clear-lib && tsc",
+    "dev": "tsc -w",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/wildseansy/sanity-plugin-computed-field.git"
+  },
+  "author": "Sean Holbert",
+  "keywords": [
+    "sanity",
+    "sanity studio",
+    "sanity plugin",
+    "computed",
+    "memoized",
+    "field",
+    "input"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@sanity/base": ">= 2.5.0",
+    "@sanity/ui": ">= 0.33.9",
+    "@sanity/util": ">= 2.5.0"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "prettier": "^2.2.1",
+    "typescript": "^4.2.2"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/wildseansy/sanity-plugin-computed-field/issues"
+  },
+  "homepage": "https://github.com/wildseansy/sanity-plugin-computed-field#readme",
+  "prettier": {
+    "semi": false,
+    "printWidth": 100,
+    "bracketSpacing": false,
+    "singleQuote": true
+  },
+  "eslintConfig": {
+    "parser": "sanipack/babel/eslint-parser",
+    "extends": [
+      "sanity",
+      "sanity/react",
+      "prettier",
+      "prettier/react"
+    ]
+  },
+  "directories": {
+    "example": "examples",
+    "lib": "lib"
+  }
+}

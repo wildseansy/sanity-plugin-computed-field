@@ -1,6 +1,6 @@
 # sanity-plugin-computed-field
 
-This plugin computes a field's value based on other fields or relationships with its document. In other words, this field memoizes a value in a document using [GROQ](https://www.sanity.io/docs/query-cheat-sheet) to lookup and custom javascript to compute the value from those GROQ results.
+This plugin computes a field's value based on other fields or relationships with its document. In other words, this field memoizes a value in a document using [GROQ](https://www.sanity.io/docs/query-cheat-sheet) to lookup and custom javascript to compute the value from those GROQ results. See [this post](https://seansy.medium.com/sanity-io-compute-a-field-4a46873ba5b2) for more info on the plugin.
 
 ## Installation
 

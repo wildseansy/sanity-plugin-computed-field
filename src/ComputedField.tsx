@@ -63,7 +63,7 @@ const validateConfiguration = (options: SanityType['options']) => {
 }
 
 const ComputedField: React.FC<SanityProps> = React.forwardRef(
-  (props, forwardedRef: React.ForwardedRef<HTMLInputElement>) => {
+  (props: SanityProps, forwardedRef: React.ForwardedRef<HTMLInputElement>) => {
     const {type, level, onFocus, value, markers} = props
     const document = props.document
     const errors = React.useMemo(() => markers.filter(isValidationErrorMarker), [markers])
@@ -71,14 +71,15 @@ const ComputedField: React.FC<SanityProps> = React.forwardRef(
     const {_id, _type}: SanityDocument = document
     const options = props.type.options
     validateConfiguration(options)
-    const reducer = React.useCallback((queryResult) => options.reduceQueryResult(queryResult), [
-      options.reduceQueryResult,
-    ])
+    const reducer = React.useCallback(
+      (queryResult: {[s: string]: unknown}) => options.reduceQueryResult(queryResult),
+      [options.reduceQueryResult]
+    )
     const handleChange = React.useCallback(
-      (val) => {
+      (val: any) => {
         let validated = val
         if (type.name === 'number') {
-          validated = parseInt(val, 10)
+          validated = parseFloat(val)
           if (validated === NaN) {
             validated = undefined
           }
@@ -87,7 +88,10 @@ const ComputedField: React.FC<SanityProps> = React.forwardRef(
       },
       [props.onChange, type.name]
     )
-    const onChange = React.useCallback((e) => handleChange(e.target.value), [handleChange])
+    const onChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => handleChange(e.target.value),
+      [handleChange]
+    )
     const generate = React.useCallback(() => {
       const query = `*[_type == '${_type}' && _id == '${_id}' || _id == '${_id.replace(
         'drafts.',

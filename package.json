@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-computed-field",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Field based on other fields. Memoization in your sanity model",
   "main": "lib/ComputedField.js",
   "scripts": {

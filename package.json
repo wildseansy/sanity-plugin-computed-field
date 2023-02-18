@@ -1,65 +1,74 @@
 {
   "name": "sanity-plugin-computed-field",
-  "version": "1.0.2",
-  "description": "A Field based on other fields. Memoization in your sanity model",
-  "main": "lib/ComputedField.js",
-  "scripts": {
-    "format": "prettier --write .",
-    "clear-lib": "node clearLib.js",
-    "build": "npm run format && npm run clear-lib && tsc",
-    "dev": "tsc -w",
-    "prepublish": "npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/wildseansy/sanity-plugin-computed-field.git"
-  },
-  "author": "Sean Holbert",
+  "version": "2.0.0",
+  "description": "",
   "keywords": [
     "sanity",
-    "sanity studio",
-    "sanity plugin",
-    "computed",
-    "memoized",
-    "field",
-    "input"
+    "sanity-plugin"
   ],
   "license": "MIT",
+  "author": "Sean H <sdholbs@gmail.com>",
+  "exports": {
+    ".": {
+      "types": "./lib/src/index.d.ts",
+      "source": "./src/index.ts",
+      "import": "./lib/index.esm.js",
+      "require": "./lib/index.js",
+      "default": "./lib/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./lib/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "v2-incompatible.js",
+    "sanity.json"
+  ],
+  "scripts": {
+    "prebuild": "npm run clean && plugin-kit verify-package --silent && pkg-utils",
+    "build": "pkg-utils build",
+    "clean": "rimraf lib",
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch"
+  },
   "dependencies": {
-    "@sanity/base": ">= 2.5.0",
-    "@sanity/ui": ">= 0.33.9",
-    "@sanity/util": ">= 2.5.0"
+    "@sanity/incompatible-plugin": "^1.0.4"
   },
   "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "prettier": "^2.2.1",
-    "typescript": "^4.2.2"
+    "@sanity/pkg-utils": "^2.2.5",
+    "@sanity/plugin-kit": "^3.1.6",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.8.4",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "react": "^18",
+    "rimraf": "^4.1.2",
+    "sanity": "^3.0.0",
+    "typescript": "^4.9.5"
   },
   "peerDependencies": {
-    "react": "^17.0.0"
+    "react": "^18",
+    "sanity": "^3.0.0"
   },
-  "bugs": {
-    "url": "https://github.com/wildseansy/sanity-plugin-computed-field/issues"
+  "engines": {
+    "node": ">=14"
   },
-  "homepage": "https://github.com/wildseansy/sanity-plugin-computed-field#readme",
-  "prettier": {
-    "semi": false,
-    "printWidth": 100,
-    "bracketSpacing": false,
-    "singleQuote": true
-  },
-  "eslintConfig": {
-    "parser": "sanipack/babel/eslint-parser",
-    "extends": [
-      "sanity",
-      "sanity/react",
-      "prettier",
-      "prettier/react"
-    ]
-  },
-  "directories": {
-    "example": "examples",
-    "lib": "lib"
+  "sanityPlugin": {
+    "verifyPackage": {
+      "scripts": false,
+      "tsconfig": false
+    }
   }
 }

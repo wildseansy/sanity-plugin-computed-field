@@ -3,47 +3,54 @@
 This plugin computes a field's value based on other fields or relationships with its document. In other words, this field memoizes a value in a document using [GROQ](https://www.sanity.io/docs/query-cheat-sheet) to lookup and custom javascript to compute the value from those GROQ results. See [this post](https://seansy.medium.com/sanity-io-compute-a-field-4a46873ba5b2) for more info on the plugin.
 
 ## Installation
+### For Sanity v2
+Use sanity-plugin-computed-field version `v1.*`. See [v1 docs](https://github.com/wildseansy/sanity-plugin-computed-field/tree/v1.0.2#installation) for configuration of v1 computed field.
 
 ```bash
-sanity install computed-field
+sanity install sanity-plugin-computed-field@^1.0.2
 ```
 
-Then you can use the `ComputedField` as an input component to help calculate values. The computed field supports `number`, `text`, `string`, or `boolean` type.
+### For Sanity v3
+Use sanity-plugin-computed-field version 2 or above
+```bash
+sanity install sanity-plugin-computed-field@^2.0.0
+```
 
 ## Configure
+Now you may use the `computedNumber`, `computedText`, `computedString` and `computedBoolean` types.  These are just `number`, `text`, `string`, and `boolean` values under the hood respectively, but you have have them computed automatically via `documentQuerySelection` and `reduceQueryResult`.
+
+`documentQuerySelection` is a groq query with respect to the current document being viewed in Sanity Studio.
 
 ```typescript
-import ComputedField from 'sanity-plugin-computed-field'
-
-{
-  name: "...", //Give your sanity field a name
-  type: "number", //"number" or "text" or "string" or "boolean"
-  inputComponent: ComputedField,
-  options: {
-    editable: true or false,
-    buttonText: "Regenerate",
-    documentQuerySelection: `
-      _id,
+  defineField({
+    name: '...', //Give your sanity field a name, title, description
+    title: '...',
+    description: '...',
+    type: 'computedNumber',
+    readOnly: true or false // set to true to disable setting this value manually
+    options: {
+      buttonText: 'Refresh',
+      documentQuerySelection: `
       "numberOfReferences": count(*[references(^._id)])
-    `
-    reduceQueryResult: (resultOfQuery) => {
-      return resultOfQuery.numberOfReferences
-    }
-  }
-}
+      `,
+      reduceQueryResult: (result: {
+        draft?: {numberOfReferences: number}
+        published: {numberOfReferences: number}
+      }) => {
+        // When 'Refresh' button is pressed, this value will be set to result.published.numberOfReferences, from the documentQuerySelection above.
+        return result.published.numberOfReferences
+      },
+    },
+  }),
 ```
 
 #### `options.documentQuerySelection` (required)
 
-Defines the body of the query **on the current document being edited**. Result of this query is passed to 'reduceQueryResult'. This selection is made every time "Regenerate" is clicked.
+Defines the body of the query **on the current document being edited**.  The result is fed into `reduceQueryResult`, containing both the `draft` and `published` versions of the document. `draft` may be `undefined` if no draft exists. This selection is made every time "Regenerate" is clicked.
 
 #### `options.reduceQueryResult` (required)
 
 Returns the value to populate computed field, based on the query result of 'documentQuerySelection'. This function is called every time "Regenerate" is clicked and the GROQ query successfully is made.
-
-#### `options.editable` (default `false`)
-
-Whether user can also edit the computed field directly.
 
 #### `options.buttonText` (default `"Regenerate"`)
 
@@ -51,73 +58,36 @@ What text should be in button user clicks to recompute the value.
 
 # A Comprehensive Example
 
-See [examples/courseBook](./examples/courseBook.ts) for full example.
+See [docs/v2/movies](./docs/v2/movies.ts) for full example.
 
-Say we ran a university. We have a corpus of courses, and each course has many scheduled times. Each scheduled course has an instructor teaching.
+This uses the movies sanity template for a new project (from `sanity init`), but adds some computed fields to synthesize if/when the next movie screenings are taking place.
 
-We might want to compute whether the course is active, or the number of scheduled classes at a given point of time (for example, the beginning of the year).
+<img src="./docs/v2/images/moviesProject.png"/>
 
-```typescript
-import ComputedField from 'sanity-plugin-computed-field'
-
-const Course = {
-  name: 'course',
-  title: 'Title for Course',
-  description: 'Represents a given course taught at Sanity U',
-  type: 'document',
-  fields: [
-    {
-      name: 'title',
-      title: 'Title',
-      description: 'Please give this course a title',
-      type: 'string',
-    },
-    {
-      title: 'Is Active',
-      description: 'Whether this course has scheduled items remaining this quarter.',
-      type: 'boolean',
-      inputComponent: ComputedField,
-      options: {
-        editable: true,
-        documentQuerySelection: `
-        "numScheduled": count(*[_type == "scheduledCourse" && references(^._id) && startTime > ${new Date().toISOString()}])
-        `,
-        reduceQueryResult: (queryResult: {numScheduled: number}) => {
-          return queryResult.numScheduled > 0
-        },
-      },
-    },
-    {
-      title: 'Number of classes this quarter',
-      description: 'Computed by number of classes on the schedule',
-      type: 'string',
-      inputComponent: ComputedField,
-      options: {
-        documentQuerySelection: `
-        "numScheduled": count(*[_type == "scheduledCourse" && references(^._id)])`,
-        reduceQueryResult: (queryResult: {numScheduled: number}) => {
-          return queryResult.numScheduled
-        },
-      },
-    },
-  ],
-}
-```
 
 # Field Examples
 
-### `type: "number"`
+### `type: "computedNumber"`
 
-<img src="./src/type-number.png" width="290">
+<img src="./docs/v2/images/computedNumber.png" width="290">
 
-### `type: "text"`
+### `type: "computedText"`
 
-<img src="./src/type-text.png" width="290">
+<img src="./docs/v2/images/computedText.png" width="290">
 
-### `type: "string"`
+### `type: "computedString"`
 
-<img src="./src/type-string.png" width="290">
+<img src="./docs/v2/images/computedString.png" width="290">
 
-### `type: "boolean"`
+### `type: "computedBoolean"`
 
-<img src="./src/type-boolean.png" width="290">
+<img src="./docs/v2/images/computedBoolean.png" width="290">
+
+## Developing
+Run the following to develop the plugin
+```bash
+npm install
+npm run link-watch
+```
+
+The project uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio) to develop and publish the plugin.

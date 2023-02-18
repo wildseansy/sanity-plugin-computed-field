@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-computed-field",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "keywords": [
     "sanity",
@@ -33,7 +33,7 @@
     "build": "pkg-utils build",
     "clean": "rimraf lib",
     "link-watch": "plugin-kit link-watch",
-    "lint": "eslint .",
+    "lint": "eslint src",
     "prepublishOnly": "npm run build",
     "watch": "pkg-utils watch"
   },
@@ -64,5 +64,11 @@
   },
   "engines": {
     "node": ">=14"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "scripts": false,
+      "tsconfig": false
+    }
   }
 }

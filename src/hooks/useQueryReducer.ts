@@ -1,7 +1,10 @@
 import React from 'react'
 import {useClient, useFormValue} from 'sanity'
-import {ComputedQueryResult, ComputedDocumentResult} from '../schema/types'
-
+import {ComputedQueryResult} from '../schema/types'
+type ComputedDocumentResult = {
+  _id: string
+  [s: string]: unknown
+}
 export const useQueryReducer = <FieldDataType extends unknown>({
   reduceQueryResult,
   documentQuerySelection,
@@ -22,12 +25,12 @@ export const useQueryReducer = <FieldDataType extends unknown>({
   const _type: string = useFormValue(['_type']) as string
   const reducer = React.useCallback(
     (queryResult: ComputedQueryResult) => reduceQueryResult(queryResult),
-    [reduceQueryResult]
+    [reduceQueryResult],
   )
   const handleRegenerateValue = React.useCallback(() => {
     const query = `*[_type == '${_type}' && _id == '${docId}' || _id == '${docId.replace(
       'drafts.',
-      ''
+      '',
     )}'] {
       _id,
       ${documentQuerySelection}
@@ -36,7 +39,9 @@ export const useQueryReducer = <FieldDataType extends unknown>({
 
     client.fetch(query).then((items: ComputedDocumentResult[]) => {
       const draft = items.find(({_id}) => _id.includes('drafts'))
-      const published = items.find(({_id}) => !_id.includes('drafts')) as ComputedDocumentResult
+      const published = items.find(
+        ({_id}) => !_id.includes('drafts'),
+      ) as ComputedDocumentResult
 
       const newValue = reducer({draft, published})
 
@@ -45,7 +50,15 @@ export const useQueryReducer = <FieldDataType extends unknown>({
       }
       setLoading(false)
     })
-  }, [_type, docId, documentQuerySelection, client, reducer, value, handleValueChange])
+  }, [
+    _type,
+    docId,
+    documentQuerySelection,
+    client,
+    reducer,
+    value,
+    handleValueChange,
+  ])
   return {
     handleRegenerateValue,
     isRegenerating: loading,

@@ -5,14 +5,22 @@ import {ComputedNumberSchemaType} from '../schema/types'
 import {useQueryReducer} from '../hooks/useQueryReducer'
 import {InputControls} from './InputControls'
 
-export type ComputedNumberInputProps = NumberInputProps<ComputedNumberSchemaType>
+export type ComputedNumberInputProps =
+  NumberInputProps<ComputedNumberSchemaType>
 
 export const ComputedNumberInput = (props: ComputedNumberInputProps) => {
   const {schemaType, onChange, value} = props
   const {options} = schemaType
-  const {reduceQueryResult, documentQuerySelection, buttonText = 'Regenerate'} = options
+  const {
+    reduceQueryResult,
+    documentQuerySelection,
+    buttonText = 'Regenerate',
+  } = options
 
-  const handleValueChange = React.useCallback((val: number) => onChange(set(val)), [onChange])
+  const handleValueChange = React.useCallback(
+    (val: number) => onChange(set(val)),
+    [onChange],
+  )
 
   const {isRegenerating, handleRegenerateValue} = useQueryReducer({
     reduceQueryResult,

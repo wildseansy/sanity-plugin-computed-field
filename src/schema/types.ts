@@ -9,14 +9,10 @@ import {
   TextOptions,
   NumberOptions,
 } from 'sanity'
-export type ComputedDocumentResult = {
-  _id: string
-  [s: string]: unknown
-}
 
 export type ComputedQueryResult = {
-  draft?: ComputedDocumentResult
-  published: ComputedDocumentResult
+  draft?: any
+  published: any
 }
 export type ComputedFieldOptions<FieldType> = {
   buttonText?: string

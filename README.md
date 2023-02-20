@@ -16,7 +16,36 @@ Use sanity-plugin-computed-field version 2 or above
 sanity install sanity-plugin-computed-field@^2.0.0
 ```
 
+### Initialize plugin
+
+In your sanity.config.ts
+```typescript
+import {sanityComputedField} from 'sanity-plugin-computed-field'
+
+export default defineConfig({
+  name: '...',
+  title: '...',
+
+  projectId: '...',
+  dataset: 'production',
+
+  plugins: [
+    deskTool(),
+    visionTool(),
+    
+    // Add this line
+    sanityComputedField()
+  ],
+
+  schema: {
+    types: schemaTypes,
+  },
+})
+
+```
 ## Configure
+
+
 Now you may use the `computedNumber`, `computedText`, `computedString` and `computedBoolean` types.  These are just `number`, `text`, `string`, and `boolean` values under the hood respectively, but you have have them computed automatically via `documentQuerySelection` and `reduceQueryResult`.
 
 `documentQuerySelection` is a groq query with respect to the current document being viewed in Sanity Studio.

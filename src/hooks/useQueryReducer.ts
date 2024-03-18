@@ -30,8 +30,6 @@ export const useQueryReducer = <FieldDataType extends unknown>({
     [reduceQueryResult],
   )
 
-  console.log('pls')
-
   const handleRegenerateValue = React.useCallback(() => {
     const query = `*[_type == '${_type}' && _id == '${docId}' || _id == '${docId.replace(
       'drafts.',

@@ -8,6 +8,7 @@
   ],
   "license": "MIT",
   "author": "Sean H <sdholbs@gmail.com>",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./lib/src/index.d.ts",

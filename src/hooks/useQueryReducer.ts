@@ -1,5 +1,5 @@
 import React from 'react'
-import {useClient, useFormValue} from 'sanity'
+import {removeDupes, useClient, useFormValue} from 'sanity'
 import {ComputedQueryResult} from '../schema/types'
 type ComputedDocumentResult = {
   _id: string
@@ -11,7 +11,9 @@ export const useQueryReducer = <FieldDataType extends unknown>({
   handleValueChange,
   value,
 }: {
-  reduceQueryResult: (result: ComputedQueryResult) => FieldDataType
+  reduceQueryResult: (
+    result: ComputedQueryResult,
+  ) => FieldDataType | Promise<FieldDataType>
   handleValueChange: (updatedValue: FieldDataType) => void
   documentQuerySelection: string
   value?: FieldDataType
@@ -27,6 +29,7 @@ export const useQueryReducer = <FieldDataType extends unknown>({
     (queryResult: ComputedQueryResult) => reduceQueryResult(queryResult),
     [reduceQueryResult],
   )
+
   const handleRegenerateValue = React.useCallback(() => {
     const query = `*[_type == '${_type}' && _id == '${docId}' || _id == '${docId.replace(
       'drafts.',
@@ -43,12 +46,16 @@ export const useQueryReducer = <FieldDataType extends unknown>({
         ({_id}) => !_id.includes('drafts'),
       ) as ComputedDocumentResult
 
-      const newValue = reducer({draft, published})
-
-      if (newValue !== value) {
-        handleValueChange(newValue)
-      }
-      setLoading(false)
+      /**
+       * Discussion regarding Promise.resolve on identifying promises
+       * https://stackoverflow.com/questions/27746304/how-to-check-if-an-object-is-a-promise
+       */
+      Promise.resolve(reducer({draft, published})).then((newValue) => {
+        if (newValue !== value) {
+          handleValueChange(newValue)
+        }
+        setLoading(false)
+      })
     })
   }, [
     _type,

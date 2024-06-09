@@ -1,19 +1,18 @@
 import React from 'react'
-import {removeDupes, useClient, useFormValue} from 'sanity'
+import {useClient, useFormValue} from 'sanity'
+
 import {ComputedQueryResult} from '../schema/types'
 type ComputedDocumentResult = {
   _id: string
   [s: string]: unknown
 }
-export const useQueryReducer = <FieldDataType extends unknown>({
+export const useQueryReducer = <FieldDataType>({
   reduceQueryResult,
   documentQuerySelection,
   handleValueChange,
   value,
 }: {
-  reduceQueryResult: (
-    result: ComputedQueryResult,
-  ) => FieldDataType | Promise<FieldDataType>
+  reduceQueryResult: (result: ComputedQueryResult) => FieldDataType | Promise<FieldDataType>
   handleValueChange: (updatedValue: FieldDataType) => void
   documentQuerySelection: string
   value?: FieldDataType
@@ -29,8 +28,7 @@ export const useQueryReducer = <FieldDataType extends unknown>({
     (queryResult: ComputedQueryResult) => reduceQueryResult(queryResult),
     [reduceQueryResult],
   )
-
-  const handleRegenerateValue = React.useCallback(() => {
+  const handleRegenerateValue = React.useCallback(async () => {
     const query = `*[_type == '${_type}' && _id == '${docId}' || _id == '${docId.replace(
       'drafts.',
       '',
@@ -40,32 +38,17 @@ export const useQueryReducer = <FieldDataType extends unknown>({
      }`
     setLoading(true)
 
-    client.fetch(query).then((items: ComputedDocumentResult[]) => {
-      const draft = items.find(({_id}) => _id.includes('drafts'))
-      const published = items.find(
-        ({_id}) => !_id.includes('drafts'),
-      ) as ComputedDocumentResult
+    const items: ComputedDocumentResult[] = await client.fetch(query)
+    const draft = items.find(({_id}) => _id.includes('drafts'))
+    const published = items.find(({_id}) => !_id.includes('drafts')) as ComputedDocumentResult
 
-      /**
-       * Discussion regarding Promise.resolve on identifying promises
-       * https://stackoverflow.com/questions/27746304/how-to-check-if-an-object-is-a-promise
-       */
-      Promise.resolve(reducer({draft, published})).then((newValue) => {
-        if (newValue !== value) {
-          handleValueChange(newValue)
-        }
-        setLoading(false)
-      })
-    })
-  }, [
-    _type,
-    docId,
-    documentQuerySelection,
-    client,
-    reducer,
-    value,
-    handleValueChange,
-  ])
+    const newValue = await Promise.resolve(reducer({draft, published}))
+
+    if (newValue !== value) {
+      handleValueChange(newValue)
+    }
+    setLoading(false)
+  }, [_type, docId, documentQuerySelection, client, reducer, value, handleValueChange])
   return {
     handleRegenerateValue,
     isRegenerating: loading,

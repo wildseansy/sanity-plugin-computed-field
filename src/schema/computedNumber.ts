@@ -1,4 +1,5 @@
 import {defineType, NumberComponents} from 'sanity'
+
 import {ComputedNumberInput} from '../components/ComputedNumberInput'
 
 export const computedNumberSchema = defineType({

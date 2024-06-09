@@ -1,4 +1,5 @@
 import {defineType, TextComponents} from 'sanity'
+
 import {ComputedTextInput} from '../components/ComputedTextInput'
 
 export const computedTextSchema = defineType({

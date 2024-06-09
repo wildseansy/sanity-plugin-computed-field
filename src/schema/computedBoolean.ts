@@ -1,4 +1,5 @@
-import {defineType, BooleanComponents} from 'sanity'
+import {BooleanComponents, defineType} from 'sanity'
+
 import {ComputedBooleanInput} from '../components/ComputedBooleanInput'
 
 export const computedBooleanSchema = defineType({

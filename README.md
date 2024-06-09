@@ -1,6 +1,8 @@
 # sanity-plugin-computed-field
 
-This plugin computes a field's value based on other fields or relationships with its document. In other words, this field memoizes a value in a document using [GROQ](https://www.sanity.io/docs/query-cheat-sheet) to lookup and custom javascript to compute the value from those GROQ results. See [this post](https://seansy.medium.com/sanity-io-compute-a-field-4a46873ba5b2) for more info on the plugin.
+> This is a **Sanity Studio v3** plugin.
+
+This plugin computes a field's value based on other fields or relationships with its document or based on external data. In other words, this field memoizes a value in a document using [GROQ](https://www.sanity.io/docs/query-cheat-sheet) to lookup and custom javascript to compute the value from those GROQ results. See [this post](https://seansy.medium.com/sanity-io-compute-a-field-4a46873ba5b2) for more info on the plugin.
 
 ## Installation
 ### For Sanity v2
@@ -32,7 +34,7 @@ export default defineConfig({
   plugins: [
     deskTool(),
     visionTool(),
-    
+
     // Add this line
     sanityComputedField()
   ],
@@ -79,7 +81,7 @@ Defines the body of the query **on the current document being edited**.  The res
 
 #### `options.reduceQueryResult` (required)
 
-Returns the value to populate computed field, based on the query result of 'documentQuerySelection'. This function is called every time "Regenerate" is clicked and the GROQ query successfully is made.
+Returns the value to populate computed field, based on the query result of 'documentQuerySelection'. This function is called every time "Regenerate" is clicked and the GROQ query successfully is made. This function can also return a promise or be `async` if any asynchronous code needs to be run to compute the result.
 
 #### `options.buttonText` (default `"Regenerate"`)
 
@@ -112,7 +114,7 @@ This uses the movies sanity template for a new project (from `sanity init`), but
 
 <img src="./docs/v2/images/computedBoolean.png" width="290">
 
-## Developing
+## Contributing
 Run the following to develop the plugin
 ```bash
 npm install

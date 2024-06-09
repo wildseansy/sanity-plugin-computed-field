@@ -1,74 +1,77 @@
 {
   "name": "sanity-plugin-computed-field",
-  "version": "2.0.1",
-  "description": "",
+  "version": "2.0.2",
+  "description": "Sanity plugin that computes a field's value based on other fields or relationships with its document or external data. In other words, this field memoizes a value in a document using GROQ to lookup and custom javascript to compute the value from those GROQ results.",
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
+  "homepage": "https://github.com/wildseansy/sanity-plugin-computed-field#readme",
+  "bugs": {
+    "url": "https://github.com/wildseansy/sanity-plugin-computed-field/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/wildseansy/sanity-plugin-computed-field.git"
+  },
   "license": "MIT",
-  "author": "Sean H <sdholbs@gmail.com>",
+  "author": "Sean Holbert <sdholbs@gmail.com>",
+  "sideEffects": false,
+  "type": "commonjs",
   "exports": {
     ".": {
-      "types": "./lib/src/index.d.ts",
       "source": "./src/index.ts",
-      "import": "./lib/index.esm.js",
-      "require": "./lib/index.js",
-      "default": "./lib/index.esm.js"
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./lib/index.js",
-  "module": "./lib/index.esm.js",
-  "source": "./src/index.ts",
-  "types": "./lib/src/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
+    "dist",
+    "sanity.json",
     "src",
-    "lib",
-    "v2-incompatible.js",
-    "sanity.json"
+    "v2-incompatible.js"
   ],
   "scripts": {
-    "prebuild": "npm run clean && plugin-kit verify-package --silent && pkg-utils",
-    "build": "pkg-utils build",
-    "clean": "rimraf lib",
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "format": "prettier --write --cache --ignore-unknown .",
     "link-watch": "plugin-kit link-watch",
-    "lint": "eslint src",
+    "lint": "eslint .",
     "prepublishOnly": "npm run build",
-    "watch": "pkg-utils watch"
+    "watch": "pkg-utils watch --strict",
+    "prepare": "husky install"
   },
   "dependencies": {
-    "@sanity/incompatible-plugin": "^1.0.4"
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^2.1.11"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "^2.2.5",
-    "@sanity/plugin-kit": "^3.1.6",
-    "@typescript-eslint/eslint-plugin": "^5.52.0",
-    "@typescript-eslint/parser": "^5.52.0",
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-config-sanity": "^6.0.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^2.8.4",
-    "prettier-plugin-packagejson": "^2.4.3",
-    "react": "^18",
-    "rimraf": "^4.1.2",
-    "sanity": "^3.0.0",
-    "typescript": "^4.9.5"
+    "@sanity/pkg-utils": "^6.9.2",
+    "@sanity/plugin-kit": "^4.0.17",
+    "@types/react": "^18.3.3",
+    "@typescript-eslint/eslint-plugin": "^7.12.0",
+    "@typescript-eslint/parser": "^7.12.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-sanity": "^7.1.2",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "prettier": "^3.3.1",
+    "prettier-plugin-packagejson": "^2.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^3.45.0",
+    "typescript": "^5.4.5",
+    "husky": "^8.0.0"
   },
   "peerDependencies": {
     "react": "^18",
-    "sanity": "^3.0.0"
+    "sanity": "^3"
   },
   "engines": {
-    "node": ">=14"
-  },
-  "sanityPlugin": {
-    "verifyPackage": {
-      "scripts": false,
-      "tsconfig": false
-    }
+    "node": ">=18"
   }
 }

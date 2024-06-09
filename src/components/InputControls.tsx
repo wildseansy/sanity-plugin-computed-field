@@ -1,5 +1,5 @@
+import {Button, Inline, Spinner} from '@sanity/ui'
 import React from 'react'
-import {Inline, Button, Spinner} from '@sanity/ui'
 
 type Props = {
   isLoading: boolean
